@@ -38,3 +38,28 @@ resource "google_container_node_pool" "gke_node_pool" {
     ]
   }
 }
+
+resource "google_sql_database_instance" "wordpress_db_instance" {
+  name             = "wordpress-sql-instance"
+  database_version = "MYSQL_8_0"
+  region           = var.region
+
+  settings {
+    tier = "db-f1-micro"
+  }
+
+  deletion_protection = false
+}
+
+# Define the database
+resource "google_sql_database" "wordpress_database" {
+  name     = "wordpress_db"
+  instance = google_sql_database_instance.wordpress_db_instance.name
+}
+
+# Define the database user
+resource "google_sql_user" "wordpress_user" {
+  name     = "wordpress"
+  instance = google_sql_database_instance.wordpress_db_instance.name
+  password = "test123"  # Replace with a secure password
+}
