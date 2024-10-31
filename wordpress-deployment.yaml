@@ -15,29 +15,27 @@ spec:
       containers:
       - name: wordpress
         image: wordpress:latest
+        resources:
+          requests:
+            cpu: "250m"
+          limits:
+            cpu: "500m"
         env:
-          - name: WORDPRESS_DB_HOST
-            value: "127.0.0.1:3306"  # Cloud SQL Proxy connects to localhost
-          - name: WORDPRESS_DB_USER
-            value: "wordpress"
-          - name: WORDPRESS_DB_PASSWORD
-            value: "test123"
-          - name: WORDPRESS_DB_NAME
-            value: "wordpress_db"
-        ports:
-        - containerPort: 80
-
-      # Add Cloud SQL Auth Proxy container
+        - name: WORDPRESS_DB_HOST
+          value: "127.0.0.1:3306"
+        - name: WORDPRESS_DB_USER
+          value: "wordpress_user"
+        - name: WORDPRESS_DB_PASSWORD
+          value: "password"
+        - name: WORDPRESS_DB_NAME
+          value: "wordpress_db"
       - name: cloud-sql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.33.1
-        command: ["/cloud_sql_proxy",
-                  "-instances=gke-wordpress-440211:europe-central2:wordpress-sql-instance=tcp:3306",
-                  "-credential_file=/secrets/cloudsql/key.json"]
+        command: ["/cloud_sql_proxy", "-instances=<PROJECT_ID>:<REGION>:<INSTANCE_NAME>=tcp:3306", "-credential_file=/secrets/cloudsql/key.json"]
         volumeMounts:
           - name: cloudsql-instance-credentials
             mountPath: /secrets/cloudsql
             readOnly: true
-    # Volume to mount the Service Account key
       volumes:
       - name: cloudsql-instance-credentials
         secret:
