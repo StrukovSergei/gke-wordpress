@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: wordpress
-        image: wordpress:latest
+        image: gcr.io/gke-wordpress-440211/custom-wordpress:latest
         resources:
           requests:
             cpu: "250m"

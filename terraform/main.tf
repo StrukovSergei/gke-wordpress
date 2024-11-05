@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
       version = "~> 4.0"
     }
   }
@@ -14,52 +14,52 @@ provider "google" {
   zone    = var.zone
 }
 
+# GKE Cluster
 resource "google_container_cluster" "gke_cluster" {
-  name     = "wordpress-gke-cluster"
-  location = var.region
-
-  initial_node_count = 1
-  min_master_version = "1.28"
-
+  name               = var.cluster_name
+  location           = var.region
+  initial_node_count = var.initial_node_count
+  min_master_version = var.master_version
   remove_default_node_pool = true
 }
 
+# Node Pool Configuration
 resource "google_container_node_pool" "gke_node_pool" {
-  name       = "wordpress-node-pool"
+  name       = var.node_pool_name
   cluster    = google_container_cluster.gke_cluster.name
   location   = var.region
-
-  node_count = 1
+  node_count = var.initial_node_count
 
   node_config {
-    machine_type = "e2-medium"
+    machine_type = var.node_machine_type
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
 }
 
+# Cloud SQL Instance Configuration
 resource "google_sql_database_instance" "wordpress_db_instance" {
-  name             = "wordpress-sql-instance"
-  database_version = "MYSQL_8_0"
+  name             = var.sql_instance_name
+  database_version = var.database_version
   region           = var.region
 
   settings {
-    tier = "db-f1-micro"
+    tier = var.sql_tier
   }
 
-  deletion_protection = false
+  deletion_protection = var.deletion_protection
 }
 
-# Define the database
+# Database Definition
 resource "google_sql_database" "wordpress_database" {
-  name     = "wordpress_db"
+  name     = var.sql_database_name
   instance = google_sql_database_instance.wordpress_db_instance.name
 }
 
-# Define the database user
+# Database User
 resource "google_sql_user" "wordpress_user" {
-  name     = "wordpress"
+  name     = var.sql_username
   instance = google_sql_database_instance.wordpress_db_instance.name
-  password = "test123"  # Replace with a secure password
+  password = var.sql_password
 }

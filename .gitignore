@@ -38,3 +38,5 @@ tls.crt
 tls.key
 
 credentials.json
+wordpress-db-credentials.yaml
+commands.txt

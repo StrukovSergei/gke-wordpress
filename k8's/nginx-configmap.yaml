@@ -5,3 +5,4 @@ metadata:
   namespace: ingress-nginx
 data:
   use-forwarded-headers: "true"
+  enable-vts-status: "true"
