@@ -81,3 +81,6 @@ This project deploys a WordPress website on **Google Kubernetes Engine (GKE)** w
 
 ---
 
+## Authors
+
+- [@StrukovSergei](https://github.com/StrukovSergei)
