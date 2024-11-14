@@ -40,3 +40,4 @@ tls.key
 credentials.json
 wordpress-db-credentials.yaml
 commands.txt
+hpaimage.png

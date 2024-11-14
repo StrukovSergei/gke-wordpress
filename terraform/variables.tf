@@ -64,6 +64,12 @@ variable "sql_tier" {
   default     = "db-f1-micro"
 }
 
+variable "private_network" {
+  description = "The VPC network for private IP of Cloud SQL."
+  type        = string
+  default     = "projects/gke-wordpress-440211/global/networks/default"
+}
+
 variable "sql_database_name" {
   description = "Name of the Cloud SQL database"
   type        = string

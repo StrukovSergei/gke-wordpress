@@ -38,7 +38,7 @@ resource "google_container_node_pool" "gke_node_pool" {
   }
 }
 
-# Cloud SQL Instance Configuration
+# Cloud SQL Instance Configuration with Private IP
 resource "google_sql_database_instance" "wordpress_db_instance" {
   name             = var.sql_instance_name
   database_version = var.database_version
@@ -46,6 +46,10 @@ resource "google_sql_database_instance" "wordpress_db_instance" {
 
   settings {
     tier = var.sql_tier
+    ip_configuration {
+      ipv4_enabled    = false
+      private_network = var.private_network
+    }
   }
 
   deletion_protection = var.deletion_protection
